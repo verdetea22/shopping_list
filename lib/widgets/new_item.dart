@@ -28,10 +28,11 @@ class _NewItemState extends State<NewItem> {
                   label: Text('Name'),
                 ),
                 validator: (value) {
-                  return 'demo'; //error message
+                  return null; //error message
                 },
               ), //instead of TextField()
               Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(
                     child: TextFormField(
@@ -61,13 +62,25 @@ class _NewItemState extends State<NewItem> {
                             ),
                           ),
                       ], 
-                      onChanged: (value) {
-                        
-                      },
+                      onChanged: (value) {},
                     ),
                   )
                 ],
               ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: (){}, 
+                    child: const Text('Reset'),
+                  ),
+                  ElevatedButton(
+                    onPressed: (){}, 
+                    child: const Text('Add Item'),
+                  )
+                ],
+              )
             ],
           ),
         ),
