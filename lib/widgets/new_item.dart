@@ -36,7 +36,7 @@ class _NewItemState extends State<NewItem> {
             'quantity': _enteredQuantity, 
             'category': _selectedCategory.title,
           },
-        ),s
+        ),
       );
       // Navigator.of(context).pop();
     }
