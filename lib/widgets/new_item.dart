@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-
 import 'package:http/http.dart' as http;
 
 import 'package:shopping_list/data/categories.dart';
@@ -16,6 +15,7 @@ class NewItem extends StatefulWidget {
     return _NewItemState();
   }
 }
+
 class _NewItemState extends State<NewItem> {
   final _formKey = GlobalKey<FormState>();
   var _enteredName = '';
@@ -23,7 +23,6 @@ class _NewItemState extends State<NewItem> {
   var _selectedCategory = categories[Categories.vegetables]!;
   var _isSending = false;
 
-  //only save if valid
   void _saveItem() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -31,21 +30,21 @@ class _NewItemState extends State<NewItem> {
         _isSending = true;
       });
       final url = Uri.https(
-        'flutter-shopping-list-1194c-default-rtdb.firebaseio.com', 'shopping-list.json');
+          'flutter-shopping-list-1194c-default-rtdb.firebaseio.com', 'shopping-list.json');
       final response = await http.post(
         url,
         headers: {
-        'Content-Type': 'application/json',
-      }, 
-      body: json.encode(
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(
           {
-            'name': _enteredName, 
-            'quantity': _enteredQuantity, 
+            'name': _enteredName,
+            'quantity': _enteredQuantity,
             'category': _selectedCategory.title,
           },
         ),
       );
-      
+
       final Map<String, dynamic> resData = json.decode(response.body);
 
       if (!context.mounted) {
@@ -54,11 +53,11 @@ class _NewItemState extends State<NewItem> {
 
       Navigator.of(context).pop(
         GroceryItem(
-          id: resData['name'], 
+          id: resData['name'],
           name: _enteredName,
           quantity: _enteredQuantity,
-          category: _selectedCategory
-        )
+          category: _selectedCategory,
+        ),
       );
     }
   }
@@ -67,7 +66,7 @@ class _NewItemState extends State<NewItem> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add a new tiem'),
+        title: const Text('Add a new item'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(12),
@@ -89,11 +88,14 @@ class _NewItemState extends State<NewItem> {
                   }
                   return null;
                 },
-                onSaved: (value){
+                onSaved: (value) {
+                  // if (value == null) {
+                  //   return;
+                  // }
                   _enteredName = value!;
                 },
-              ), //instead of TextField()
-               Row(
+              ), // instead of TextField()
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(
@@ -122,7 +124,7 @@ class _NewItemState extends State<NewItem> {
                     child: DropdownButtonFormField(
                       value: _selectedCategory,
                       items: [
-                        for (final category in categories.entries) //entries iterates through maps
+                        for (final category in categories.entries)
                           DropdownMenuItem(
                             value: category.value,
                             child: Row(
@@ -134,40 +136,40 @@ class _NewItemState extends State<NewItem> {
                                 ),
                                 const SizedBox(width: 6),
                                 Text(category.value.title),
-                              ]
+                              ],
                             ),
                           ),
-                      ], 
+                      ],
                       onChanged: (value) {
                         setState(() {
                           _selectedCategory = value!;
                         });
                       },
                     ),
-                  )
+                  ),
                 ],
               ),
-               const SizedBox(height: 12),
+              const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: _isSending 
-                    ? null 
-                    : () {
-                      _formKey.currentState!.reset();
-                    },
+                    onPressed: _isSending
+                        ? null
+                        : () {
+                            _formKey.currentState!.reset();
+                          },
                     child: const Text('Reset'),
                   ),
                   ElevatedButton(
                     onPressed: _isSending ? null : _saveItem,
-                    child: _isSending 
-                      ? const SizedBox(
-                        height: 16, 
-                        width: 16, 
-                        child: CircularProgressIndicator(),
-                      )
-                     : const Text('Add Item'),
+                    child: _isSending
+                        ? const SizedBox(
+                            height: 16,
+                            width: 16,
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Text('Add Item'),
                   )
                 ],
               ),
